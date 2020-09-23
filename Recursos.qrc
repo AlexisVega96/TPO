@@ -9,8 +9,6 @@
         <file>QtImagen/DRLemon.jpg</file>
         <file>QtImagen/Coca-Cola.png</file>
         <file>QtImagen/7up.png</file>
-        <file>QtImagen/LataMediana.jpg</file>
-        <file>QtImagen/lataGrande.jpeg</file>
-        <file>QtImagen/Lata.jpg</file>
+        <file>QtImagen/Icono.ico</file>
     </qresource>
 </RCC>

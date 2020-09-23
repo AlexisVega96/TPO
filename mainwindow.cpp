@@ -1,18 +1,39 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QImageReader>     // buscaar info como hacer que sea portable y me tome las dimensiones
-#include <QPicture>         // del label en la interfaz.
+#include <QImageReader>
+#include <QPicture>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+//*******************************************************************
+    Port = NULL;    //indica que el objeto puerto no esta creado;
+    Portname = "";
+    EnumerarPuertos();
+    ui->dateTimeEdit->setDisabled(true);
+    ui->textSTOCK->setDisabled(true);
+    ui->labelMsJ->setText(" ingrese nombre y contraseña para acceder ");
+//*******************************************************************
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete Port;            //libero port
+}
+
+void MainWindow::EnumerarPuertos() //agregado
+{
+    ui->comboBoxPort->clear();
+
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+
+    for (int i = 0; i < ports.size(); i++)
+    {
+        ui->comboBoxPort->addItem(ports.at(i).portName(), ports.at(i).portName());
+    }
 }
 
 
@@ -145,44 +166,69 @@ void MainWindow::on_radioButton_12_toggled(bool checked)
     }
 }
 
-void MainWindow::on_radioButton_2_toggled(bool checked)
+void MainWindow::on_pushButtonCONECTAR_clicked()
 {
-    QPixmap s ("../interfaz/QtImagen/lataGrande.jpeg");
-
-    if(checked == true)
+    if (!Port)
     {
-        ui->Imagen1->setPixmap(s.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::FastTransformation));
+        Port = new QSerialPort(Portname);
+        Port->setBaudRate(QSerialPort::Baud9600);
+        Port->setFlowControl(QSerialPort::NoFlowControl);
+        Port->setParity(QSerialPort::NoParity);
+        Port->setDataBits(QSerialPort::Data8);
+        Port->setStopBits(QSerialPort::OneStop);
+        if(!Port->open(QIODevice::ReadWrite))
+        {
+            QMessageBox::critical(this,"Error","No se puede abrir el puerto "+Port->portName());
+            delete Port;
+            Port = NULL;
+        }
+        else
+        {
+            ui->labelEstado->setText("CONECTADO A LA PLACA");
+
+            //agregar codigo para enviar informacion.
+        }
     }
     else
     {
-        ui->Imagen1->clear();
+        delete Port;
+        Port = NULL;
+        ui->labelEstado->setText("Conectar");
     }
 }
 
-void MainWindow::on_radioButton_toggled(bool checked)
+void MainWindow::on_actionLogin_triggered()
 {
-    QPixmap s ("../interfaz/QtImagen/LataMediana.jpg");
 
-    if(checked == true)
-    {
-        ui->Imagen1->setPixmap(s.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::FastTransformation));
-    }
-    else
-    {
-        ui->Imagen1->clear();
-    }
 }
 
-void MainWindow::on_radioButton_3_toggled(bool checked)
+void MainWindow::on_pushButtonINGRESAR_clicked()
 {
-    QPixmap s ("../interfaz/QtImagen/Lata.jpg");
+        QString nombre,clave,cla_nom,cla_pass;
+        nombre = ui->lineEdit_NOMBRE->text();
+        clave = ui->lineEdit_PASSWORD->text();
+        cla_nom = "info2";
+        cla_pass = "r2054";
+        if( nombre == cla_nom )
+        {
+            if( clave == cla_pass)
+            {
+                ui->labelMsJ->setText(" Bienbenido!!.. ");
+                ui->dateTimeEdit->setEnabled(true);
+                ui->textSTOCK->setEnabled(true);
+            }
+        }
+        else
+        {
+            ui->labelMsJ->setText(" nombre o contraseña INCORRECTO!.. ");
+        }
+}
 
-    if(checked == true)
-    {
-        ui->Imagen1->setPixmap(s.scaled(100, 90, Qt::IgnoreAspectRatio, Qt::FastTransformation));
-    }
-    else
-    {
-        ui->Imagen1->clear();
-    }
+void MainWindow::on_pushButton_SALIR_clicked()
+{
+        ui->dateTimeEdit->setDisabled(true);
+        ui->textSTOCK->setDisabled(true);
+        ui->labelMsJ->setText(" ingrese nombre y contraseña para acceder ");
+        ui->lineEdit_NOMBRE->clear();
+        ui->lineEdit_PASSWORD->clear();
 }

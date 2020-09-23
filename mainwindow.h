@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 
+//****************************************************
+#include <QMainWindow>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QMessageBox>
+//****************************************************
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -35,13 +42,23 @@ private slots:
 
     void on_radioButton_12_toggled(bool checked);
 
-    void on_radioButton_2_toggled(bool checked);
 
-    void on_radioButton_toggled(bool checked);
+    void on_pushButtonCONECTAR_clicked();
 
-    void on_radioButton_3_toggled(bool checked);
+    void on_actionLogin_triggered();
+
+    void on_pushButtonINGRESAR_clicked();
+
+    void on_pushButton_SALIR_clicked();
 
 private:
     Ui::MainWindow *ui;
+
+//*******************************************************************// agregado por mi
+    QString Portname;
+    //QextSerialPort *Port;
+    QSerialPort *Port;
+    void EnumerarPuertos();
+//*******************************************************************
 };
 #endif // MAINWINDOW_H
