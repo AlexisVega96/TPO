@@ -1,0 +1,196 @@
+/*******************************************************************************************************************************//**
+ *
+ * @file		DR_Gpio.c
+ * @brief		Selecion de funcionalidad de puertos
+ * @date		2020.09.30
+ * @author		Alexis Vega
+ *
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** INCLUDES
+ **********************************************************************************************************************************/
+#include "DR_Gpio.h"
+
+/***********************************************************************************************************************************
+ *** DEFINES PRIVADOS AL MODULO
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** MACROS PRIVADAS AL MODULO
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** TIPOS DE DATOS PRIVADOS AL MODULO
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** TABLAS PRIVADAS AL MODULO
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** VARIABLES GLOBALES PUBLICAS
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** VARIABLES GLOBALES PRIVADAS AL MODULO
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** PROTOTIPO DE FUNCIONES PRIVADAS AL MODULO
+ **********************************************************************************************************************************/
+
+ /***********************************************************************************************************************************
+ *** FUNCIONES PRIVADAS AL MODULO
+ **********************************************************************************************************************************/
+
+ /***********************************************************************************************************************************
+ *** FUNCIONES GLOBALES AL MODULO
+ **********************************************************************************************************************************/
+
+/**
+ * \fn 		void SetPINSEL( uint8_t puerto , uint8_t pin ,uint8_t modo)
+ * \brief 	Configura funcion de pin de GPIO
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t modo : modo de funcionamiento
+ * \return 	void
+ * */
+
+void SetPINSEL( uint8_t puerto, uint8_t pin, uint8_t modo )
+{
+    if( pin < 16 )
+    {
+        PINSEL[ 2 * puerto ] = PINSEL [ 2 * puerto] & ~ ( 3 << (pin * 2) ); 
+        PINSEL[ 2 * puerto ] = PINSEL[ 2 * puerto ] | modo << ( pin * 2 );
+    }
+    else
+    {
+        PINSEL[ 2 * puerto + 1 ] = PINSEL [2 * puerto + 1 ] & ~ ( 3 << (pin * 2));
+        PINSEL[ 2 * puerto ] = PINSEL[ 2 * puerto + 1 ] | modo << ( pin * 2 );
+    }
+}
+
+/**
+ * \fn 		void SetMODE_OD( uint8_t puerto , uint8_t pin , uint8_t tipo )
+ * \brief 	Configura MODE_OD
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t tipo : tipo de salida (normal , drain)
+ * \return 	void
+ * */
+
+void SetMODE_OD( uint8_t puerto , uint8_t pin , uint8_t tipo )
+{
+    if( tipo == NORMAL )
+    {
+        PINMODE_OD[ puerto ] &= ~ ( 1 << pin );
+    }
+    if( tipo == DRAIN )
+    {
+        PINMODE_OD[ puerto ] |= ( 1 << pin );
+    }
+}
+
+/**
+ * \fn 		void SetPINMODE( uint8_t puerto , uint8_t pin ,uint8_t modo)
+ * \brief 	Configura el pin de GPIO en la funcion deseada de entrada como (pull-up , pull-down
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t modo : modo de funcionamiento
+ * \return 	void
+ * */
+
+void SetPINMODE( uint8_t puerto, uint8_t pin, uint8_t modo )
+{
+    if( pin < 16)
+    {
+        PINMODE[ 2 * puerto ] &= ~ ( 3 << (pin * 2) );
+        PINMODE[ 2 * puerto ] |= modo << ( pin * 2 );
+    }
+    else
+    {
+        PINMODE[ 2 * puerto + 1] &= ~ ( 3 << (pin * 2) );
+        PINMODE[ 2 * puerto ] |= modo << ( pin * 2 );
+    }
+}
+
+/**
+ * \fn 		void SetDIR( uint8_t puerto , uint8_t pin ,uint8_t tipo)
+ * \brief 	Configura el pin de GPIO como entrada o salida
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t tipo : tipo de comportamiento (entrada o salida)
+ * \return 	void
+ * */
+
+void SetDIR( uint8_t puerto, uint8_t pin, uint8_t tipo )
+{
+    if( tipo == ENTRADA)
+    {
+        GPIOs[ 8 * puerto ] &= ~( 1 << pin );
+    }
+    if( tipo == SALIDA)
+    {
+        GPIOs[ 8 * puerto ] |= ( 1 << pin );
+    }
+}
+
+/**
+ * \fn 		void SetPIN( uint8_t puerto , uint8_t pin , uint8_t estado )
+ * \brief 	Pone un valor en el pin elegido
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t estado : esatdo de un determinado pin
+ * \return 	void
+ * */
+
+void SetPIN( uint8_t puerto, uint8_t pin, uint8_t estado )
+{
+    if( estado == 0)
+    {
+        GPIOs[ 8 * puerto + 5 ] &= ~ ( 1 << pin );
+    }
+    else
+    {
+        GPIOs[ 8 * puerto + 5 ] |= ( 1 << pin );
+    }
+}
+
+/**
+ * \fn 		uint8_t GetPIN( uint8_t puerto , uint8_t pin , uint8_t actividad )
+ * \brief 	Lee valor del pin elegido
+ * \details
+ * \author 	Alexis Vega
+ * \date   	2020.09.30
+ * \param   [in] uint8_t puerto : numero de puerto
+ * \param   [in] uint8_t pin : numero de pin
+ * \param   [in] uint8_t actividad :
+ * \param   [out] uint8_t  aux : estado de un determinado pin 
+ * \return 	uint8_t
+ * */
+
+uint8_t GetPI( uint8_t puerto, uint8_t pin, uint8_t actividad )
+{
+    uint8_t aux;
+    
+    aux = GPIOs[ 8 * puerto + 5 ] & ( 1 << pin );
+    aux = aux >> pin;
+    
+    return aux;
+}

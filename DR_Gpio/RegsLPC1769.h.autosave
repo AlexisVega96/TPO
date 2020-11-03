@@ -1,0 +1,187 @@
+/*******************************************************************************************************************************//**
+ *
+ * @file		${file_name}
+ * @brief		Breve descripción del objetivo del Módulo
+ * @date		${date}
+ * @author		Ing. Marcelo Trujillo
+ *
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** MODULO
+ **********************************************************************************************************************************/
+
+#ifndef REGSLPC1769_H
+#define REGSLPC1769_H
+
+/***********************************************************************************************************************************
+ *** INCLUDES GLOBALES
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** DEFINES GLOBALES
+ **********************************************************************************************************************************/
+
+#define 		__R					volatile const
+#define 		__W					volatile
+#define 		__RW				volatile
+
+#define			PORT0				0
+#define			PORT1				1
+#define			PORT2				2
+#define 		PORT3				3
+#define			PORT4				4
+
+
+#define		FUNCION_GPIO            0
+#define		FUNCION_1               1
+#define		FUNCION_2               2
+#define		FUNCION_3               3
+
+#define			ENTRADA				0
+#define			SALIDA				1
+#define			BAJO				0
+#define			ALTO				1
+#define			ON					1
+#define			OFF					0
+#define			DRAIN				1
+
+
+/*PINSEL: PIN Function Select Register*/
+/*Configura la funcion de un PIN en un PORT*/
+
+#define 		PINSEL 				((__RW uint32_t*) 0x4002C000UL)
+#define			PINSEL0 			PINSEL[0]
+#define 		PINSEL1 			PINSEL[1]
+#define	 		PINSEL2 			PINSEL[2]
+#define 		PINSEL3 			PINSEL[3]
+#define 		PINSEL4 			PINSEL[4]
+#define 		PINSEL5 			PINSEL[5]		/*Not used*/
+#define 		PINSEL6 			PINSEL[6]		/*Not used*/
+#define 		PINSEL7 			PINSEL[7]
+#define 		PINSEL8 			PINSEL[8]		/*Not used*/
+#define 		PINSEL9 			PINSEL[9]
+
+#define 		FUNCION_GPIO 		0
+#define 		FUNCION_1	 		1
+#define 		FUNCION_2    		2
+#define 		FUNCION_3    		3
+
+
+/*PINMODE:*/
+/*Configura el modo de funcionamiento de un PIN de un PORT seteado como GPIO y entrada previamente*/
+
+#define			PINMODE				((__RW uint32_t*) 0x4002C040UL)
+#define			PINMODE0			PINMODE[0]
+#define			PINMODE1			PINMODE[1]
+#define			PINMODE2			PINMODE[2]
+#define			PINMODE3			PINMODE[3]
+#define			PINMODE4			PINMODE[4]
+#define			PINMODE5			PINMODE[5]		/*Not used*/
+#define			PINMODE6			PINMODE[6]		/*Not used*/
+#define			PINMODE7			PINMODE[7]
+#define			PINMODE8			PINMODE[8]		/*Not used*/
+#define			PINMODE9			PINMODE[9]
+
+#define			PINMODE_PULLUP		0
+#define			PINMODE_REPEAT		1
+#define			PINMODE_NONE		2
+#define			PINMODE_PULLDOWN	3
+
+
+/*PINMODE_OD:*/
+/*Configura el comportamiento de un PIN de un puerto previamente configurado como GPIO y salida*/
+
+#define			PINMODE_OD			((__RW uint32_t*) 0x4002C068UL)
+#define			PINMODE_OD0			PINMODE_OD[0]
+#define			PINMODE_OD1			PINMODE_OD[1]
+#define			PINMODE_OD2			PINMODE_OD[2]
+#define			PINMODE_OD3			PINMODE_OD[3]
+#define			PINMODE_OD4			PINMODE_OD[4]
+
+
+/*GPIOs:*/
+/*Conjunto de registros que permiten configurar a un PIN GPIO de un puerto*/
+
+#define			GPIOs				((__RW uint32_t*) 0x2009C000UL)
+
+#define 		FIO0DIR				GPIOs[0]
+#define 		FIO1DIR				GPIOs[8]
+#define 		FIO2DIR				GPIOs[16]
+#define 		FIO3DIR				GPIOs[24]
+#define 		FIO4DIR				GPIOs[32]
+
+#define			FIO0MASK			GPIOs[4]
+#define			FIO1MASK			GPIOs[12]
+#define			FIO2MASK			GPIOs[20]
+#define			FIO3MASK			GPIOs[28]
+#define			FIO4MASK			GPIOs[36]
+
+#define			FIO0PIN				GPIOs[5]
+#define			FIO1PIN				GPIOs[13]
+#define			FIO2PIN				GPIOs[21]
+#define			FIO3PIN				GPIOs[29]
+#define			FIO4PIN				GPIOs[37]
+
+#define			FIO0SET				GPIOs[6]
+#define			FIO1SET				GPIOs[14]
+#define			FIO2SET				GPIOs[22]
+#define			FIO3SET				GPIOs[30]
+#define			FIO4SET				GPIOs[38]
+
+#define			FIO0CLR				GPIOs[7]
+#define			FIO1CLR				GPIOs[15]
+#define			FIO2CLR				GPIOs[23]
+#define			FIO3CLR				GPIOs[31]
+#define			FIO4CLR				GPIOs[39]
+
+
+
+/* ///////////////////   PCONP   //////////////////////////
+//  Power Control for Peripherals register (PCONP - 0x400F C0C4) [pag. 62 user manual LPC1769]
+//  0x400FC0C4UL : Direccion de inicio del registro de habilitación de dispositivos:       
+*/
+
+#define 	PCONP	(* ( ( __RW uint32_t  * ) 0x400FC0C4UL ))
+#define     PCUART0     3
+#define     PCSPI       8
+#define     PCRTC       9
+#define 	PCADC       12
+
+/*/ ///////////////////   PCLKSEL   //////////////////////////
+//!< Peripheral Clock Selection registers 0 and 1 (PCLKSEL0 -0x400F C1A8 and PCLKSEL1 - 0x400F C1AC) [pag. 56 user manual]
+//!< 0x400FC1A8UL : Direccion de inicio de los registros de seleccion de los CLKs de los dispositivos:
+*/
+
+#define		PCLKSEL		( ( __RW uint32_t  * ) 0x400FC1A8UL )
+
+/* Registros PCLKSEL */
+
+#define		PCLKSEL0	PCLKSEL[0]
+#define		PCLKSEL1	PCLKSEL[1]
+
+
+/***********************************************************************************************************************************
+ *** MACROS GLOBALES
+ **********************************************************************************************************************************/
+
+/***********************************************************************************************************************************
+ *** TIPO DE DATOS GLOBALES
+ **********************************************************************************************************************************/
+typedef unsigned int				uint32_t;
+typedef short unsigned int 			uint16_t;
+typedef unsigned char 				uint8_t;
+
+/***********************************************************************************************************************************
+ *** VARIABLES GLOBALES
+ **********************************************************************************************************************************/
+// extern tipo nombreVariable;
+
+/***********************************************************************************************************************************
+ *** PROTOTIPOS DE FUNCIONES GLOBALES
+ **********************************************************************************************************************************/
+
+#endif /* REGSLPC1769_H*/
+
+
+
